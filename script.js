@@ -7,6 +7,7 @@ let userBio = document.querySelector('.bio');
 let userUrl = document.querySelector('.url');
 let url = window.location.toString();
 
+//если не задано в ?username={имя пользователя}, то показывать мою страницу
 function getName(url){
     let nameUrl = url.split('=')[1];
     if (nameUrl == undefined) {
@@ -25,7 +26,8 @@ fetch(`https://api.github.com/users/${name}`)
         username.innerHTML = json.name;
         userAvatar.src = json.avatar_url;
         userBio.innerHTML = json.bio;
-        userUrl.innerHTML = json.html_url;
+        userUrl.href = json.html_url;
+        userUrl.innerHTML = "Ссылка на профиль";
         } else {
         document.body.innerHTML = 'Информация о пользователе не доступна';
         }
