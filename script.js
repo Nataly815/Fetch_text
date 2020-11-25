@@ -6,7 +6,9 @@ let userAvatar = document.querySelector('.userAvatar');
 let userBio = document.querySelector('.bio');
 let userUrl = document.querySelector('.url');
 
-fetch('https://api.github.com/users/Nataly815')
+let name = 'Nataly815';
+
+fetch(`https://api.github.com/users/${name}`)
     .then(res => res.json())
     .then(json => {
         nickname.innerHTML = json.login;
