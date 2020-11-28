@@ -1,13 +1,25 @@
 'use strict'
 
+
 let nickname = document.querySelector('.nickname');
 let username = document.querySelector('.username');
 let userAvatar = document.querySelector('.userAvatar');
 let userBio = document.querySelector('.bio');
 let userUrl = document.querySelector('.url');
-let url = window.location.toString();
 
-//если не задано в ?username={имя пользователя}, то показывать мою страницу
+let url = window.location.toString();
+let currentDate = document.querySelector('.current-date');
+let date = new Date();
+
+
+let preloader = document.querySelector('.preloader');
+let wrap = document.querySelector('.wrap');
+
+function removePreloader(){
+	preloader.style.display = 'none';
+    wrap.style.display = 'block';
+}
+
 function getName(url){
     let nameUrl = url.split('=')[1];
     if (nameUrl == undefined) {
@@ -16,10 +28,21 @@ function getName(url){
     return nameUrl;
 }
 
-let name = getName(url);
+const name = getName(url);
 
-fetch(`https://api.github.com/users/${name}`)
-    .then(res => res.json())
+const getDate = new Promise((resolve, reject) => setTimeout(() => date ? resolve(date) : reject('Что-то пошло не так...'), 3000));
+
+const getApi = fetch(`https://api.github.com/users/${name}`);
+
+let requestUrl;
+let requestDate;
+
+Promise.all([getApi, getDate])
+    .then(([url, date]) => {
+        requestUrl = url;
+        requestDate = date; 
+        })
+    .then(res => requestUrl.json())
     .then(json => {
         if (json.login !== undefined){
         nickname.innerHTML = json.login;
@@ -29,7 +52,11 @@ fetch(`https://api.github.com/users/${name}`)
         userUrl.href = json.html_url;
         userUrl.innerHTML = "Ссылка на профиль";
         } else {
-        document.body.innerHTML = 'Информация о пользователе не доступна';
+        document.body.innerHTML = 'Информация о пользователе не доступна!';
         }
+    })
+    .then(res => {
+        currentDate.innerHTML = `${requestDate}`;
+        removePreloader();
     })
     .catch(err => document.body.innerHTML = 'Информация о пользователе не доступна');
