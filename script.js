@@ -22,7 +22,7 @@ function removePreloader(){
 
 function getName(url){
     let nameUrl = url.split('=')[1];
-    if (nameUrl == undefined) {
+    if (nameUrl === undefined) {
         nameUrl = 'Nataly815';
     }
     return nameUrl;
